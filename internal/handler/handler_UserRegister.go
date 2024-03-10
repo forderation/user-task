@@ -20,19 +20,31 @@ func (h *Handler) UserRegister(c *gin.Context) {
 		})
 		return
 	}
-	ctx := c.Request.Context()
-	_, err = h.UserUsecase.GetUser(ctx, user.GetUserInput{
-		Email: null.StringFrom(bodyRequest.Email),
-	})
-	if errors.Is(err, user.ErrUserNotFound) {
+	if bodyRequest.Name == "" {
 		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
-			Error: "email already registered",
+			Error: "name is required",
 		})
 		return
 	}
+	ctx := c.Request.Context()
+	emailExist := true
+	_, err = h.UserUsecase.GetUser(ctx, user.GetUserInput{
+		Email: null.StringFrom(bodyRequest.Email),
+	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ErrorBodyResponse{
-			Error: err.Error(),
+		if errors.Is(err, user.ErrUserNotFound) {
+			emailExist = false
+			err = nil
+		} else {
+			c.JSON(http.StatusInternalServerError, ErrorBodyResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+	}
+	if emailExist {
+		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
+			Error: "email already registered",
 		})
 		return
 	}

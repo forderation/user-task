@@ -15,6 +15,7 @@ func (usecase *Usecase) GetUser(ctx context.Context, input GetUserInput) (output
 		ID:       input.ID,
 		Email:    input.Email,
 		Password: input.Password,
+		NotEqID:  input.NotEqID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -37,6 +38,7 @@ type GetUserInput struct {
 	ID       null.Int32
 	Email    null.String
 	Password null.String
+	NotEqID  null.Int32
 }
 
 type GetUserOutput struct {

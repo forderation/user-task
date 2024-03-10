@@ -23,6 +23,9 @@ func (repo *Repository) GetUser(ctx context.Context, input GetUserInput) (output
 	if input.Email.Valid {
 		query = query.Where(user.Email.Eq(input.Email.String))
 	}
+	if input.NotEqID.Valid {
+		query = query.Where(user.ID.Neq(input.NotEqID.Int32))
+	}
 	model, err := query.First()
 	if err != nil {
 		return
@@ -42,6 +45,7 @@ type GetUserInput struct {
 	ID       null.Int32
 	Email    null.String
 	Password null.String
+	NotEqID  null.Int32
 }
 
 type GetUserOutput struct {
