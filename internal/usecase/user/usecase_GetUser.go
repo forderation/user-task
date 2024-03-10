@@ -12,10 +12,9 @@ import (
 
 func (usecase *Usecase) GetUser(ctx context.Context, input GetUserInput) (output GetUserOutput, err error) {
 	user, err := usecase.UserRepository.GetUser(ctx, users.GetUserInput{
-		ID:       input.ID,
-		Email:    input.Email,
-		Password: input.Password,
-		NotEqID:  input.NotEqID,
+		ID:      input.ID,
+		Email:   input.Email,
+		NotEqID: input.NotEqID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -35,10 +34,9 @@ func (usecase *Usecase) GetUser(ctx context.Context, input GetUserInput) (output
 }
 
 type GetUserInput struct {
-	ID       null.Int32
-	Email    null.String
-	Password null.String
-	NotEqID  null.Int32
+	ID      null.Int32
+	Email   null.String
+	NotEqID null.Int32
 }
 
 type GetUserOutput struct {

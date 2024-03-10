@@ -38,9 +38,9 @@ func GetJWT() *encodeDecodeTokenJWT {
 	if encodeDecode == nil {
 		encodeDecode = &encodeDecodeTokenJWT{
 			algorithm:              jwtv5.SigningMethodHS256,
-			accessTokenExpiration:  time.Duration(viper.GetInt("jwt.access_token_duration")) * time.Hour,
-			refreshTokenExpiration: time.Duration(viper.GetInt("jwt.refresh_token_duration")) * time.Hour,
-			secret:                 viper.GetString("jwt.secret"),
+			accessTokenExpiration:  time.Duration(viper.GetInt("jwt_access_token_duration")) * time.Hour,
+			refreshTokenExpiration: time.Duration(viper.GetInt("jwt_refresh_token_duration")) * time.Hour,
+			secret:                 viper.GetString("jwt_secret"),
 		}
 	}
 	return encodeDecode

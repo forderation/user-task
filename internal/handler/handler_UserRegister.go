@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"net/mail"
 
 	"github.com/forderation/null"
 	"github.com/forderation/user-task/internal/usecase/user"
@@ -16,13 +17,20 @@ func (h *Handler) UserRegister(c *gin.Context) {
 	err := c.ShouldBindJSON(&bodyRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
-			Error: err.Error(),
+			Error: "invalid body request",
 		})
 		return
 	}
 	if bodyRequest.Name == "" {
 		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
 			Error: "name is required",
+		})
+		return
+	}
+	_, err = mail.ParseAddress(bodyRequest.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
+			Error: "email not valid",
 		})
 		return
 	}

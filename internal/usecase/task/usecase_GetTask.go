@@ -12,7 +12,8 @@ import (
 
 func (uc *Usecase) GetTask(ctx context.Context, input GetTaskInput) (output GetTaskOutput, err error) {
 	taskOutput, err := uc.TaskRepository.GetTask(ctx, tasks.GetTaskInput{
-		ID: input.ID,
+		ID:     input.ID,
+		UserID: input.UserID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -33,7 +34,8 @@ func (uc *Usecase) GetTask(ctx context.Context, input GetTaskInput) (output GetT
 }
 
 type GetTaskInput struct {
-	ID null.Int32
+	ID     null.Int32
+	UserID null.Int32
 }
 
 type GetTaskOutput struct {

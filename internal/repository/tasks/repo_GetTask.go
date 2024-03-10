@@ -21,6 +21,9 @@ func (repo *Repository) GetTask(ctx context.Context, input GetTaskInput) (output
 	if input.ID.Valid {
 		query = query.Where(task.ID.Eq(input.ID.Int32))
 	}
+	if input.UserID.Valid {
+		query = query.Where(task.UserID.Eq(input.UserID.Int32))
+	}
 	model, err := query.First()
 	if err != nil {
 		return
@@ -38,7 +41,8 @@ func (repo *Repository) GetTask(ctx context.Context, input GetTaskInput) (output
 }
 
 type GetTaskInput struct {
-	ID null.Int32
+	ID     null.Int32
+	UserID null.Int32
 }
 
 type GetTaskOutput struct {

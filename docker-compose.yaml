@@ -1,5 +1,18 @@
 version: '3'
 services:
+  api:
+    image: api:user_task
+    container_name: api-user_task
+    build:
+      context: ./
+      dockerfile: api.Dockerfile
+      target: runner
+    restart: always
+    ports:
+      - "8081:8081"
+    networks:
+      - local-network-user_task
+
   mysql_db_user_task:
     image: mysql:8.0
     cap_add:

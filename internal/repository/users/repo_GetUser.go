@@ -42,10 +42,9 @@ func (repo *Repository) GetUser(ctx context.Context, input GetUserInput) (output
 }
 
 type GetUserInput struct {
-	ID       null.Int32
-	Email    null.String
-	Password null.String
-	NotEqID  null.Int32
+	ID      null.Int32
+	Email   null.String
+	NotEqID null.Int32
 }
 
 type GetUserOutput struct {

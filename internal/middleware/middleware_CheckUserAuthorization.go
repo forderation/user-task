@@ -66,7 +66,7 @@ func (h *Middleware) CheckUserAuthorization() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set(KEY_CONTEXT_USER_ID, userOutput.ID)
+		c.Set(KEY_CONTEXT_USER_ID, int(userOutput.ID))
 		c.Next()
 	}
 }

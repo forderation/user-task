@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"net/mail"
 	"strconv"
 
 	"github.com/forderation/null"
@@ -32,22 +33,27 @@ func (h *Handler) UserUpdate(c *gin.Context) {
 	err = c.ShouldBindJSON(&bodyRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
-			Error: err.Error(),
+			Error: "invalid body request",
 		})
 		return
 	}
 	ctx := c.Request.Context()
 	name := null.StringFromPtr(bodyRequest.Name)
 	email := null.StringFromPtr(bodyRequest.Email)
-	if name.Valid {
-		if name.String == "" {
+	if name.Valid && name.String == "" {
+		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
+			Error: "name is required",
+		})
+		return
+	}
+	if email.Valid {
+		_, err = mail.ParseAddress(email.String)
+		if err != nil {
 			c.JSON(http.StatusBadRequest, ErrorBodyResponse{
-				Error: "name is required",
+				Error: "invalid email",
 			})
 			return
 		}
-	}
-	if email.Valid {
 		emailExist := true
 		_, err = h.UserUsecase.GetUser(ctx, user.GetUserInput{
 			Email:   email,
@@ -82,16 +88,21 @@ func (h *Handler) UserUpdate(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, UserUpdateBodyResponse{
+	response := UserUpdateBodyResponse{
 		ID: userIDAuth,
-	})
+	}
+	if email.Valid {
+		response.Message = "because email changed you must log in again, to get new access token"
+	}
+	c.JSON(http.StatusOK, response)
 }
 
 type UserUpdateBodyRequest struct {
-	Name  *string `json:"name,omitempty"`
-	Email *string `json:"email,omitempty"`
+	Name  *string `json:"name"`
+	Email *string `json:"email"`
 }
 
 type UserUpdateBodyResponse struct {
-	ID int32 `json:"id"`
+	ID      int32  `json:"id"`
+	Message string `json:"message"`
 }

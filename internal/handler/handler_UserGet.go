@@ -4,9 +4,11 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/forderation/null"
 	"github.com/forderation/user-task/internal/middleware"
+	"github.com/forderation/user-task/internal/usecase/task"
 	"github.com/forderation/user-task/internal/usecase/user"
 	"github.com/gin-gonic/gin"
 )
@@ -34,7 +36,7 @@ func (h *Handler) UserGet(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, user.ErrUserNotFound) {
 			c.JSON(http.StatusNotFound, ErrorBodyResponse{
-				Error: err.Error(),
+				Error: "user not found",
 			})
 			return
 		}
@@ -43,15 +45,46 @@ func (h *Handler) UserGet(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, UserGetBodyResponse{
+	response := UserGetBodyResponse{
 		ID:    userOutput.ID,
 		Name:  userOutput.Name,
 		Email: userOutput.Email,
+		Tasks: make([]UserGetBodyResponseTask, 0),
+	}
+	tasksOutput, err := h.TaskUsecase.GetTasks(ctx, task.GetTasksInput{
+		UserID: null.Int32From(userOutput.ID),
 	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorBodyResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	for _, taskOutput := range tasksOutput.Items {
+		response.Tasks = append(response.Tasks, UserGetBodyResponseTask{
+			ID:          taskOutput.ID,
+			Title:       taskOutput.Title,
+			Description: taskOutput.Description.Ptr(),
+			Status:      taskOutput.Status,
+			CreatedAt:   taskOutput.CreatedAt,
+			UpdatedAt:   taskOutput.UpdatedAt,
+		})
+	}
+	c.JSON(http.StatusOK, response)
 }
 
 type UserGetBodyResponse struct {
-	ID    int32  `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID    int32                     `json:"id"`
+	Name  string                    `json:"name"`
+	Email string                    `json:"email"`
+	Tasks []UserGetBodyResponseTask `json:"tasks"`
+}
+
+type UserGetBodyResponseTask struct {
+	ID          int32     `json:"id"`
+	Title       string    `json:"title"`
+	Description *string   `json:"description,omitempty"`
+	Status      string    `json:"status"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

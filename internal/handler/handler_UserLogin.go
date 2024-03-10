@@ -16,7 +16,7 @@ func (h *Handler) UserLogin(c *gin.Context) {
 	err := c.ShouldBindJSON(&bodyRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorBodyResponse{
-			Error: err.Error(),
+			Error: "invalid body request",
 		})
 		return
 	}

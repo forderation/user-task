@@ -1,2 +1,5 @@
 service_addr = "0.0.0.0:8081"
 db_dsn = "root:root@tcp(mysql_db_user_task:52000)/user_task?parseTime=true"
+jwt_access_token_duration = 1
+jwt_refresh_token_duration = 5
+jwt_secret = "e78e8348-2773-49b5-a00b-974a8b05a597"
