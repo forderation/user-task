@@ -1,0 +1,2 @@
+service_addr = "0.0.0.0:8081"
+db_dsn = "root:root@tcp(mysql_db_user_task:52000)/user_task?parseTime=true"

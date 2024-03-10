@@ -1,0 +1,19 @@
+version: '3'
+services:
+  mysql_db_user_task:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=user_task
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_TCP_PORT=52000
+    ports:
+      - '52000:52000'
+    networks:
+      - local-network-user_task
+
+networks:
+  local-network-user_task:
+    driver: bridge
