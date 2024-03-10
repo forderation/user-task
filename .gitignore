@@ -38,6 +38,7 @@ Thumbs.db
 *.war
 
 # Large media files
+*gen_test.db
 *.mp4
 *.tiff
 *.avi

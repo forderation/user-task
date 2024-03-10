@@ -10,6 +10,8 @@ import (
 	"syscall"
 
 	"github.com/forderation/user-task/cmd"
+	"github.com/forderation/user-task/internal/repository/tasks"
+	"github.com/forderation/user-task/internal/repository/users"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -22,6 +24,8 @@ func main() {
 	db := cmd.ProvideMysqlDB(viper.GetString("db_dsn"))
 
 	// init repository
+	tasks.NewRepository(db)
+	users.NewRepository(db)
 
 	address := viper.GetString("service_addr")
 	srv := &http.Server{Addr: address}
