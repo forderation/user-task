@@ -3,9 +3,12 @@ module github.com/forderation/user-task
 go 1.21.7
 
 require (
+	github.com/forderation/null v0.0.0-20231103082200-db0dae89179a
 	github.com/gin-gonic/gin v1.9.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.18.2
+	go.uber.org/mock v0.4.0
+	gorm.io/driver/mysql v1.5.2
 	gorm.io/gen v0.3.25
 	gorm.io/gorm v1.25.7
 	gorm.io/plugin/dbresolver v1.5.1
@@ -59,6 +62,5 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/datatypes v1.1.1-0.20230130040222-c43177d3cf8c // indirect
-	gorm.io/driver/mysql v1.5.2 // indirect
 	gorm.io/hints v1.1.0 // indirect
 )

@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/forderation/user-task/cmd"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -16,7 +17,12 @@ import (
 
 func main() {
 	loadConfigFile()
-	mySqlDB := initMysqlDB(viper.GetString("db_dsn"))
+
+	// init driver
+	db := cmd.ProvideMysqlDB(viper.GetString("db_dsn"))
+
+	// init repository
+
 	address := viper.GetString("service_addr")
 	srv := &http.Server{Addr: address}
 	go func() {
