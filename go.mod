@@ -5,9 +5,11 @@ go 1.21.7
 require (
 	github.com/forderation/null v0.0.0-20231103082200-db0dae89179a
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.18.2
 	go.uber.org/mock v0.4.0
+	golang.org/x/crypto v0.16.0
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/driver/sqlite v1.4.3
 	gorm.io/gen v0.3.25
@@ -52,7 +54,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.19.0 // indirect

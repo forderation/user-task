@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/forderation/null"
+	"github.com/forderation/user-task/internal/db"
+	"github.com/forderation/user-task/util/pagination"
 )
 
 func (repo *Repository) GetTasks(ctx context.Context, input GetTasksInput) (output GetTasksOutput, err error) {
@@ -21,12 +23,18 @@ func (repo *Repository) GetTasks(ctx context.Context, input GetTasksInput) (outp
 	if input.UserID.Valid {
 		query = query.Where(task.UserID.Eq(input.UserID.Int32))
 	}
+	totalData, err := query.Count()
+	if err != nil {
+		return
+	}
+	db.ApplyPaginationQuery(query.DO, input.Pagination)
 	models, err := query.Find()
 	if err != nil {
 		return
 	}
 	output = GetTasksOutput{
-		Items: make([]GetTasksOutputItem, 0),
+		Items:      make([]GetTasksOutputItem, 0),
+		Pagination: pagination.CreatePaginationOutput(input.Pagination, totalData),
 	}
 	for _, model := range models {
 		output.Items = append(output.Items, GetTasksOutputItem{
@@ -43,11 +51,13 @@ func (repo *Repository) GetTasks(ctx context.Context, input GetTasksInput) (outp
 }
 
 type GetTasksInput struct {
-	UserID null.Int32
+	Pagination pagination.PaginationInput
+	UserID     null.Int32
 }
 
 type GetTasksOutput struct {
-	Items []GetTasksOutputItem
+	Pagination pagination.PaginationOutput
+	Items      []GetTasksOutputItem
 }
 
 type GetTasksOutputItem struct {

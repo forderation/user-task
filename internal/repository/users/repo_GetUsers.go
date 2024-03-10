@@ -3,6 +3,9 @@ package users
 import (
 	"context"
 	"time"
+
+	"github.com/forderation/user-task/internal/db"
+	"github.com/forderation/user-task/util/pagination"
 )
 
 func (repo *Repository) GetUsers(ctx context.Context, input GetUsersInput) (output GetUsersOutput, err error) {
@@ -15,12 +18,18 @@ func (repo *Repository) GetUsers(ctx context.Context, input GetUsersInput) (outp
 		user.CreatedAt,
 		user.UpdatedAt,
 	)
+	totalData, err := query.Count()
+	if err != nil {
+		return
+	}
+	db.ApplyPaginationQuery(query.DO, input.Pagination)
 	models, err := query.Find()
 	if err != nil {
 		return
 	}
 	output = GetUsersOutput{
-		Items: make([]GetUsersOutputItem, 0),
+		Items:      make([]GetUsersOutputItem, 0),
+		Pagination: pagination.CreatePaginationOutput(input.Pagination, totalData),
 	}
 	for _, model := range models {
 		output.Items = append(output.Items, GetUsersOutputItem{
@@ -36,10 +45,12 @@ func (repo *Repository) GetUsers(ctx context.Context, input GetUsersInput) (outp
 }
 
 type GetUsersInput struct {
+	Pagination pagination.PaginationInput
 }
 
 type GetUsersOutput struct {
-	Items []GetUsersOutputItem
+	Pagination pagination.PaginationOutput
+	Items      []GetUsersOutputItem
 }
 
 type GetUsersOutputItem struct {
