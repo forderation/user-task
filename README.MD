@@ -45,4 +45,4 @@ aa9890ae4fa8   api:user_task      "./main"                 3 minutes ago   Up 3 
 32c1f6da98dd   mysql:8.0          "docker-entrypoint.s…"   12 hours ago    Up 12 hours    3306/tcp, 33060/tcp, 0.0.0.0:52000->52000/tcp   user-task-mysql_db_user_task-1
 ```
 ## API Documentation
-There is postman documentation you can look up at `user_task_postman_collection.json` file
+There is postman documentation you can look up at `user_task_postman_collection.json` file. Just import the file to postman app or postman web.
